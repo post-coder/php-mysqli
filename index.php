@@ -1,25 +1,17 @@
 <?php
 
-// con la funzione define() definiamo una COSTANTE in PHP
-// ha bisogno di due argomenti: il primo è il nome della costante, il secondo è il suo valore
-// le costanti per best practice e per distinguerle dalle variabili
-// non hanno il simbolo del dollaro e sono scritte tutte in maiuscolo
-define("DB_SERVERNAME", "localhost");
-define("DB_USERNAME","root");
-define("DB_PASSWORD", "root");
-define("DB_NAME", "movie_db");
 
-
-// Crea un'interfaccia di connessione e la salva in una variabile ($connection)
-$connection = new mysqli(DB_SERVERNAME, DB_USERNAME, DB_PASSWORD, DB_NAME);
- 
-// Controlla la connessione, mostra un messaggio solo se ci sono problemi
-if ($connection && $connection->connect_error) {
-    echo "Connection failed: " . $connection->connect_error;
+session_start();
+// variabili di sessione (metodo più utilizzato per gestire i login)
+if(!isset($_SESSION['username'])) {
+    header('Location: login.php');
 }
-// se non leggiamo nulla vuol dire che la connessione al nostro database è andata a buon fine
 
 
+
+
+
+include_once './db/connection.php';
 
 // salviamo la query sql da eseguire
 $sql = "SELECT movies.*, categories.name AS 'category'
@@ -49,6 +41,10 @@ $result = $connection->query($sql);
 <body>
     <div class="container py-5">
         <h1>PHP + MySQL</h1>
+
+        <h3 class="mb-5">
+            Ciao <?php echo $_SESSION['name'] ?> 
+        </h3>
 
         <h2 class="mb-4">Film</h2>
         <ul>
