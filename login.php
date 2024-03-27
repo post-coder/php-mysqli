@@ -34,14 +34,32 @@
             include_once './db/connection.php';
             
             // controllare che l'username sia presente nel db e che la password combaci
-            $sql = 'SELECT * 
-            FROM `users`
-            WHERE `username` = "' . $_POST['username'] .'" AND `password` = ' . $_POST['password'];
+            // $sql = 'SELECT * 
+            // FROM `users`
+            // WHERE `username` = "' . $_POST['username'] .'" AND `password` = ' . $_POST['password'];
+
+            $stmt = $connection->prepare(
+                'SELECT * 
+                FROM `users`
+                WHERE `username` = ? AND `password` = ?');
+
+            $stmt->bind_param("ss", $username, $password);
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+
+	
+            $stmt->execute();
+
+
 
             // echo $sql;
 
             // eseguiamo la query e salviamo il risultato
-            $result = $connection->query($sql);
+            // $result = $connection->query($sql);
+
+
+            $result = $stmt->get_result();
+
 
             if($result && $result->num_rows > 0) {
                 // siamo sicuri che il login sia stato effettuato!
